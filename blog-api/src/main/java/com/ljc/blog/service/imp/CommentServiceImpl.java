@@ -41,6 +41,7 @@ public class CommentServiceImpl implements CommentService {
         queryWrapper.eq(Comment::getArticleId, articleId);
         // 先查询主评论
         queryWrapper.eq(Comment::getLevel, 1);
+        queryWrapper.orderByDesc(Comment::getCreateDate);
         List<Comment> comments = commentMapper.selectList(queryWrapper);
         // 结果不能直接展示，我们做一个数据转移
         List<CommentVo> commentVoList = copyList(comments);
