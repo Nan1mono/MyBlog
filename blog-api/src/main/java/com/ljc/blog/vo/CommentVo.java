@@ -13,8 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 public class CommentVo  {
 
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long id;
+//    @JsonSerialize(using = ToStringSerializer.class)
+    private String id;
 
     private UserVo author;
 

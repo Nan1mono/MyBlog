@@ -160,7 +160,7 @@ public class ArticleServiceImpl implements ArticleService {
         article.setSummary(articleParams.getSummary());             // 简介
         article.setCreateDate(System.currentTimeMillis());          // 当前发布时间
         article.setCommentCounts(0);                                // 评论数量
-        article.setCategoryId(articleParams.getCategory().getId()); // 类别
+        article.setCategoryId(Long.parseLong(articleParams.getCategory().getId())); // 类别
         // 将文章id和tagId插入tag_article
         articleMapper.insert(article);
         // 取出文章的标签对象
@@ -171,7 +171,7 @@ public class ArticleServiceImpl implements ArticleService {
             for (TagVo tagVo : tags){
                 ArticleTag articleTag = new ArticleTag();
                 articleTag.setArticleId(articleId);
-                articleTag.setTagId(tagVo.getId());
+                articleTag.setTagId(Long.parseLong(tagVo.getId()));
                 articleTagsMapper.insert(articleTag);
             }
         }
@@ -195,6 +195,7 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleVo copy(Article article, boolean isTag, boolean isAuthor){
         ArticleVo articleVo = new ArticleVo();
         BeanUtils.copyProperties(article, articleVo);
+        articleVo.setId(String.valueOf(article.getId()));
         // 手动转换时间格式
         articleVo.setCreateDate(new DateTime(article.getCreateDate()).toString("yyyy-MM-dd HH:mm"));
         // 当然查询博客并不是一定需要tag归类和作者昵称，为了模块的灵活度，在这里我们做一个判断，判断tag和author在查询时是否需要文章类别和作者昵称
@@ -217,6 +218,7 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleVo copy(Article article, boolean isTag, boolean isAuthor, boolean isBody, boolean isCategory){
         ArticleVo articleVo = new ArticleVo();
         BeanUtils.copyProperties(article, articleVo);
+        articleVo.setId(String.valueOf(article.getId()));
         // 手动转换时间格式
         articleVo.setCreateDate(new DateTime(article.getCreateDate()).toString("yyyy-MM-dd HH:mm"));
         // 当然查询博客并不是一定需要tag归类和作者昵称，为了模块的灵活度，在这里我们做一个判断，判断tag和author在查询时是否需要文章类别和作者昵称

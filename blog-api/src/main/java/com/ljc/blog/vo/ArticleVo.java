@@ -20,8 +20,8 @@ import java.util.List;
 @AllArgsConstructor
 public class ArticleVo {
 
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long id;
+//    @JsonSerialize(using = ToStringSerializer.class)
+    private String id;
 
     private String title;
 

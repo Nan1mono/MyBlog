@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginUserVo {
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long id;
+//    @JsonSerialize(using = ToStringSerializer.class)
+    private String id;
     private String account;
     private String nickname;
     private String avatar;

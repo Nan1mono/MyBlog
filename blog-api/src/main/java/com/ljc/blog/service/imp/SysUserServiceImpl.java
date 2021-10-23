@@ -74,7 +74,7 @@ public class SysUserServiceImpl implements SysUserService {
         }
         // 数据转移
         LoginUserVo loginUserVo = new LoginUserVo();
-        loginUserVo.setId(sysUser.getId());
+        loginUserVo.setId(String.valueOf(sysUser.getId()));
         loginUserVo.setAccount(sysUser.getAccount());
         loginUserVo.setNickname(sysUser.getNickname());
         loginUserVo.setAvatar(sysUser.getAvatar());
@@ -116,6 +116,7 @@ public class SysUserServiceImpl implements SysUserService {
             sysUser.setNickname("注销用户");
         }
         BeanUtils.copyProperties(sysUser, userVo);
+        userVo.setId(String.valueOf(sysUser.getId()));
         return userVo;
     }
 
