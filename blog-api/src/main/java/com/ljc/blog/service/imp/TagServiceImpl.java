@@ -1,5 +1,6 @@
 package com.ljc.blog.service.imp;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ljc.blog.dao.mapper.TagMapper;
 import com.ljc.blog.dao.pojo.Tag;
 import com.ljc.blog.service.TagService;
@@ -48,9 +49,25 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Result listAllTags() {
+        LambdaQueryWrapper<Tag> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(Tag::getId, Tag::getTagName);
         List<Tag> tagList = tagMapper.selectList(null);
         List<TagVo> tagVoList = copyList(tagList);
         return Result.success(tagVoList);
+    }
+
+    @Override
+    public Result listAllTagsDetail() {
+        List<Tag> tagList = tagMapper.selectList(null);
+        List<TagVo> tagVoList = copyList(tagList);
+        return Result.success(tagVoList);
+    }
+
+    @Override
+    public Result getTagsDetailById(Long id) {
+        Tag tag = tagMapper.selectById(id);
+        TagVo tagVo = copy(tag);
+        return Result.success(tagVo);
     }
 
     /**

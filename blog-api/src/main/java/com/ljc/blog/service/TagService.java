@@ -23,4 +23,17 @@ public interface TagService {
      * 获取所有标签
      */
     Result listAllTags();
+
+    /**
+     * 获取所有标签的详细信息
+     * @return
+     */
+    Result listAllTagsDetail();
+
+    /**
+     * 标签列表详情和该标签下的文章列表
+     * @param id
+     * @return
+     */
+    Result getTagsDetailById(Long id);
 }

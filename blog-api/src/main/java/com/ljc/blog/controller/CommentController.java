@@ -1,5 +1,6 @@
 package com.ljc.blog.controller;
 
+import com.ljc.blog.common.chache.Cache;
 import com.ljc.blog.dao.pojo.Comment;
 import com.ljc.blog.service.CommentService;
 import com.ljc.blog.vo.Result;
@@ -15,12 +16,12 @@ public class CommentController {
 
     /**
      * 根据文章id获取评论列表
-     * @param articleId
+     * @param id
      * @return
      */
     @GetMapping("/article/{id}")
-    public Result listCommentsById(@PathVariable("id") Long articleId){
-        return commentService.listCommentsById(articleId);
+    public Result listCommentsById(@PathVariable("id") Long id){
+        return commentService.listCommentsById(id);
     }
 
     /**

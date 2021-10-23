@@ -1,9 +1,11 @@
 package com.ljc.blog.controller;
 
+import com.ljc.blog.common.chache.Cache;
 import com.ljc.blog.service.TagService;
 import com.ljc.blog.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,5 +30,24 @@ public class TagController {
     @GetMapping
     public Result listAllTags(){
         return tagService.listAllTags();
+    }
+
+    /**
+     * 获取所有标签的详细信息
+     * 对应客户端导航栏标签模块
+     */
+    @Cache
+    @GetMapping("/detail")
+    public Result listAllTagsDetail(){
+        return tagService.listAllTagsDetail();
+    }
+
+    /**
+     * 标签列表
+     */
+    @Cache
+    @GetMapping("/detail/{id}")
+    public Result getTagsDetailById(@PathVariable("id") Long id){
+        return tagService.getTagsDetailById(id);
     }
 }

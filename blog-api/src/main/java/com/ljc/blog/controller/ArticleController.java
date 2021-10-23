@@ -1,6 +1,7 @@
 package com.ljc.blog.controller;
 
 import com.ljc.blog.common.aop.LogAnnotation;
+import com.ljc.blog.common.chache.Cache;
 import com.ljc.blog.service.ArticleService;
 import com.ljc.blog.vo.Result;
 import com.ljc.blog.vo.params.ArticleParams;
@@ -21,6 +22,7 @@ public class ArticleController {
      */
     @PostMapping
     @LogAnnotation(module = "文章", operation = "获取首页文章列表")
+    @Cache(expire = 5 * 60 * 1000,name = "news_article")
     public Result listArticles(@RequestBody PageParams pageParams){
         Result result = articleService.listArticles(pageParams);
         return result;
@@ -30,6 +32,7 @@ public class ArticleController {
      * 查找浏览量最多的文章，并取前limit条数据
      */
     @PostMapping("/hot")
+    @Cache(expire = 5 * 60 * 1000,name = "news_article")
     public Result listHotArticles(){
         int limit = 5;
         Result result = articleService.listHotArticles(limit);
@@ -40,6 +43,7 @@ public class ArticleController {
      * 查找最新文章，并取前limit条数据
      */
     @PostMapping("/new")
+    @Cache(expire = 5 * 60 * 1000,name = "news_article")
     public Result newArticles(){
         int limit = 5;
         Result result = articleService.listNewArticles(limit);
@@ -50,6 +54,7 @@ public class ArticleController {
      * 文章归档 即按照时间整理文章
      */
     @PostMapping("/listArchives")
+    @Cache(expire = 5 * 60 * 1000,name = "news_article")
     public Result listArchives(){
         return articleService.listArchives();
     }

@@ -32,13 +32,13 @@ public class CommentServiceImpl implements CommentService {
      * 还需要作者信息，comment中只有作者id，根据作者id查找作者信息
      * comment还有level字段，根据level等级来判断是否有子评论
      * 如果是子评论，还需要根parent_id进行查询，是哪条评论下的子评论
-     * @param articleId
+     * @param id
      * @return
      */
     @Override
-    public Result listCommentsById(Long articleId) {
+    public Result listCommentsById(Long id) {
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Comment::getArticleId, articleId);
+        queryWrapper.eq(Comment::getArticleId, id);
         // 先查询主评论
         queryWrapper.eq(Comment::getLevel, 1);
         queryWrapper.orderByDesc(Comment::getCreateDate);
@@ -81,19 +81,14 @@ public class CommentServiceImpl implements CommentService {
         Long parent = commentParams.getParent();
         // 如果当前评论的父评论id不存在或者为0 就代表他本身就是一个父评论
         // 如果当前评论为父评论需要将parentId设置为0
-        if (parent == null || parent == 0){
+        if (parent == null || parent == 0) {
             comment.setLevel(1);
-            comment.setParentId(0L);
-        }else {
+        }else{
             comment.setLevel(2);
-            comment.setParentId(parent);
         }
+        comment.setParentId(parent == null ? 0 : parent);
         Long toUserId = commentParams.getToUserId();
-        if (toUserId == null || toUserId == 0){
-            comment.setToUid(0L);
-        }else {
-            comment.setToUid(toUserId);
-        }
+        comment.setToUid(toUserId == null ? 0 : toUserId);
         commentMapper.insert(comment);
         return Result.success(null);
     }
@@ -112,7 +107,7 @@ public class CommentServiceImpl implements CommentService {
         commentVo.setId(String.valueOf(comment.getId()));
         // 根据作者Id获取作者信息
         Long userId = comment.getAuthorId();
-        UserVo userVo = sysUserService.getUserVoById(userId);
+        UserVo userVo = this.sysUserService.getUserVoById(userId);
         commentVo.setAuthor(userVo);
         // 查询当前评论的子评论 首先需要当前评论level=1，否则跳过
         Integer level = comment.getLevel();
@@ -128,7 +123,7 @@ public class CommentServiceImpl implements CommentService {
             // 获取父评论id
             Long toUid = comment.getToUid();
             // 根据父评论id获取父评论对象
-            UserVo toUserVo = sysUserService.getUserVoById(toUid);
+            UserVo toUserVo = this.sysUserService.getUserVoById(toUid);
             commentVo.setToUser(toUserVo);
         }
         return commentVo;

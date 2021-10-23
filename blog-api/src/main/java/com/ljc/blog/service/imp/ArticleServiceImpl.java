@@ -1,6 +1,7 @@
 package com.ljc.blog.service.imp;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ljc.blog.dao.dos.Archives;
 import com.ljc.blog.dao.mapper.ArticleBodyMapper;
@@ -50,17 +51,45 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Result listArticles(PageParams pageParams) {
         Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
-        // 查定查询条件 数据按照时间倒叙排序
-        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
-        // 时间排序 和 置顶排序
-        queryWrapper.orderByDesc(Article::getCreateDate, Article::getWeight);       // 等价于 order by created_data  等价于 order by weight
-        Page<Article> articlePage = articleMapper.selectPage(page, queryWrapper);
-        // 取出查询文章集合
-        List<Article> articleList = articlePage.getRecords();
-        // vo层数据转移  需要查询文章归档类别和文章作者
+        IPage<Article> iPage = articleMapper.listArticles(page, pageParams.getCategoryId(), pageParams.getTagId(), pageParams.getYear(), pageParams.getMonth());
+        List<Article> articleList = iPage.getRecords();
         List<ArticleVo> articleVoList = copyList(articleList, true, true);
         return Result.success(articleVoList);
     }
+
+//    @Override
+//    public Result listArticles(PageParams pageParams) {
+//        Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
+//        // 查定查询条件 数据按照时间倒叙排序
+//        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+//        // 时间排序 和 置顶排序
+//        queryWrapper.orderByDesc(Article::getCreateDate, Article::getWeight);       // 等价于 order by created_data  等价于 order by weight
+//        if (pageParams.getCategoryId() != null && pageParams.getCategoryId() != 0L){
+//            queryWrapper.eq(Article::getCategoryId, pageParams.getCategoryId());
+//        }
+//        // 用于存储articleId
+//        List<Long> articleIdList = new ArrayList<>();
+//        if (pageParams.getTagId() != null && pageParams.getTagId() != 0L){
+//            // 查询tag_article表 查询出指定tagId的articleId
+//            LambdaQueryWrapper<ArticleTag> articleTagLambdaQueryWrapper = new LambdaQueryWrapper<>();
+//            articleTagLambdaQueryWrapper.eq(ArticleTag::getTagId, pageParams.getTagId());
+//            List<ArticleTag> articleTagList = articleTagsMapper.selectList(articleTagLambdaQueryWrapper);
+//            // 如果大于0 就代表改分类下有文章，将所有的articleId存进去
+//            if (articleTagList.size() > 0){
+//                for (ArticleTag articleTag : articleTagList){
+//                    articleIdList.add(articleTag.getArticleId());
+//                }
+//                // 添加查询条件 in 表示包含
+//                queryWrapper.in(Article::getId, articleIdList);
+//            }
+//        }
+//        Page<Article> articlePage = articleMapper.selectPage(page, queryWrapper);
+//        // 取出查询文章集合
+//        List<Article> articleList = articlePage.getRecords();
+//        // vo层数据转移  需要查询文章归档类别和文章作者
+//        List<ArticleVo> articleVoList = copyList(articleList, true, true);
+//        return Result.success(articleVoList);
+//    }
 
     /**
      * 查找最热门文章
