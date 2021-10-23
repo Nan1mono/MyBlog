@@ -205,7 +205,7 @@ public class ArticleServiceImpl implements ArticleService {
         }
         if (isAuthor){
             // 设定文章作者昵称
-            articleVo.setAuthor(sysUserService.getUserById(article.getId()).getNickname());
+            articleVo.setAuthor(sysUserService.getUserById(article.getAuthorId()).getNickname());
         }
         return articleVo;
     }
